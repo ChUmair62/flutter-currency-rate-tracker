@@ -5,6 +5,8 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 import 'services/currency_api.dart';
 import 'utils/top_currencies.dart';
+import 'widgets/crypto_section.dart';
+
 
 void main() {
   runApp(const CurrencyApp());
@@ -186,6 +188,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
 
                                 const SizedBox(height: 24),
+                                const SizedBox(height: 32),
+                                const CryptoSection(),
+
 
                                 // ===== GLASS DROPDOWN =====
                                 DropdownButtonHideUnderline(
