@@ -43,8 +43,9 @@ class _CryptoCardState extends State<CryptoCard> {
             borderRadius: BorderRadius.circular(20),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-              child: AspectRatio(
-                aspectRatio: 1, // same square size as currency card
+              child: SizedBox(
+                               width: 300,
+                               height: 380, // same square size as currency card
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -53,55 +54,63 @@ class _CryptoCardState extends State<CryptoCard> {
                     border: Border.all(color: Colors.white24),
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.network(
-                        widget.logoUrl,
-                        width: 56,
-                        height: 56,
-                        errorBuilder: (_, __, ___) =>
-                            const Icon(Icons.currency_bitcoin,
-                                color: Colors.white, size: 48),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        widget.symbol,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        widget.name,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        '\$${widget.price.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        '${positive ? '+' : ''}${widget.change24h.toStringAsFixed(2)}%',
-                        style: TextStyle(
-                          color: positive
-                              ? Colors.greenAccent
-                              : Colors.redAccent,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Image.network(
+      widget.logoUrl,
+      width: 48,
+      height: 48,
+      fit: BoxFit.contain,
+      errorBuilder: (_, __, ___) =>
+          const Icon(Icons.currency_bitcoin,
+              color: Colors.white, size: 40),
+    ),
+
+    const SizedBox(height: 12),
+
+    Text(
+      widget.symbol,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+
+    Text(
+      widget.name,
+      textAlign: TextAlign.center,
+      style: const TextStyle(
+        color: Colors.white70,
+        fontSize: 13,
+      ),
+    ),
+
+    const SizedBox(height: 10),
+
+    Text(
+      '\$${widget.price.toStringAsFixed(2)}',
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 15,
+      ),
+    ),
+
+    const SizedBox(height: 4),
+
+    Text(
+      '${widget.change24h >= 0 ? '+' : ''}${widget.change24h.toStringAsFixed(2)}%',
+      style: TextStyle(
+        color: widget.change24h >= 0
+            ? Colors.greenAccent
+            : Colors.redAccent,
+        fontSize: 13,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+),
+
                 ),
               ),
             ),

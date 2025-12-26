@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'sections/crypto_section.dart';
 
-
-
 void main() {
   runApp(const MyApp());
 }
@@ -57,7 +55,7 @@ class _CurrencyPageState extends State<CurrencyPage> {
   ];
 
   String selectedCurrency = 'USD';
-  double rateToPKR = 280.0; // placeholder
+  double rateToPKR = 280.0;
   final TextEditingController amountController =
       TextEditingController(text: '1');
 
@@ -104,158 +102,147 @@ class _CurrencyPageState extends State<CurrencyPage> {
           // ===== DARK OVERLAY =====
           Container(color: Colors.black.withOpacity(0.6)),
 
-          // ===== CONTENT =====
+          // ===== PAGE CONTENT =====
           SingleChildScrollView(
-  child: Center(
-    child: ConstrainedBox(
-      constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height,
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+  const SizedBox(height: 80),
+
+  // ===== CURRENCY TITLE =====
+  const Text(
+    'Currencies',
+    style: TextStyle(
+      color: Colors.white,
+      fontSize: 28,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+
+  const SizedBox(height: 30),
+
+  // ===== CURRENCY CARDS =====
+  SizedBox(
+    height: 340,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      itemCount: currencies.length,
+      itemBuilder: (context, index) {
+        final currency = currencies[index];
+        final isSelected = currency['code'] == selectedCurrency;
+
+        return CurrencyCard(
+          code: currency['code']!,
+          flagCode: currency['flag']!,
+          selected: isSelected,
+          onTap: () {
+            setState(() {
+              selectedCurrency = currency['code']!;
+              rateToPKR = 280.0 + index; // placeholder
+            });
+          },
+        );
+      },
+    ),
+  ),
+
+  const SizedBox(height: 100),
+  const SizedBox(height: 40),
+
+// ===== PKR CONVERSION BOX =====
+ClipRRect(
+  borderRadius: BorderRadius.circular(18),
+  child: BackdropFilter(
+    filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+    child: Container(
+      width: 360,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 22,
+        vertical: 16,
       ),
-      child: IntrinsicHeight(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // 🔥 vertical centering
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.white24),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$selectedCurrency → PKR',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
 
-            // ===== SECTION TITLE =====
-            const Text(
-              'Currencies',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
+          const SizedBox(height: 12),
+
+          TextField(
+            controller: amountController,
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              setState(() {
+                amount = double.tryParse(value) ?? 1.0;
+              });
+            },
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'Enter amount',
+              hintStyle: const TextStyle(color: Colors.white54),
+              filled: true,
+              fillColor: Colors.black.withOpacity(0.35),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 10,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
               ),
             ),
+          ),
 
-            const SizedBox(height: 30),
+          const SizedBox(height: 14),
 
-            // ===== HORIZONTAL CURRENCY CARDS =====
-            SizedBox(
-              height: 340, // MUST be >= card size
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                itemCount: currencies.length,
-                itemBuilder: (context, index) {
-                  final currency = currencies[index];
-                  final isSelected =
-                      currency['code'] == selectedCurrency;
-
-                  return CurrencyCard(
-                    code: currency['code']!,
-                    flagCode: currency['flag']!,
-                    selected: isSelected,
-                    onTap: () {
-                      setState(() {
-                        selectedCurrency = currency['code']!;
-                        rateToPKR = 280.0 + index; // placeholder
-                      });
-                    },
-                  );
-                },
-              ),
+          Text(
+            '$amount $selectedCurrency = ${(amount * rateToPKR).toStringAsFixed(2)} PKR',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
             ),
-
-            const SizedBox(height: 40),
-
-            // ===== CALCULATION BOX (RECTANGULAR) =====
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                  child: Container(
-                    width: 360,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: Colors.white24),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min, // 🔒 no overflow
-                      children: [
-                        Text(
-                          '$selectedCurrency → PKR',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        const SizedBox(height: 12),
-
-                        TextField(
-                          controller: amountController,
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            setState(() {
-                              amount =
-                                  double.tryParse(value) ?? 1.0;
-                            });
-                          },
-                          style:
-                              const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'Enter amount',
-                            hintStyle: const TextStyle(
-                                color: Colors.white54),
-                            filled: true,
-                            fillColor:
-                                Colors.black.withOpacity(0.35),
-                            contentPadding:
-                                const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 10,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 14),
-
-                        Text(
-                          '$amount $selectedCurrency = ${(amount * rateToPKR).toStringAsFixed(2)} PKR',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 30),
-            // ===== CRYPTO SECTION =====
-const CryptoSection(),
-
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   ),
 ),
 
+
+  // ===== CRYPTO =====
+  CryptoSection(),
+
+  const SizedBox(height: 120),
+],
+
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
-}
+} // 🔴 THIS WAS MISSING BEFORE — DO NOT REMOVE
 
-// ===== CURRENCY CARD =====
-// ===== CURRENCY CARD (FIXED & STABLE) =====
+// ===================================================================
+// ======================= CURRENCY CARD ==============================
+// ===================================================================
+
 class CurrencyCard extends StatefulWidget {
   final String code;
   final String flagCode;
@@ -298,7 +285,7 @@ class _CurrencyCardState extends State<CurrencyCard> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                 child: AspectRatio(
-                  aspectRatio: 1, // 🔒 PERFECT SQUARE
+                  aspectRatio: 1,
                   child: Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -313,31 +300,31 @@ class _CurrencyCardState extends State<CurrencyCard> {
                         width: 1.5,
                       ),
                     ),
-                    child:Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  mainAxisSize: MainAxisSize.min,
-  children: [
-    Flexible(
-      child: Image.network(
-        'https://flagcdn.com/w80/${widget.flagCode}.png',
-        width: 100,
-        fit: BoxFit.contain,
-        errorBuilder: (_, __, ___) =>
-            const Icon(Icons.flag, color: Colors.white, size: 40),
-      ),
-    ),
-    const SizedBox(height: 12),
-    Text(
-      widget.code,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  ],
-),
-
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Image.network(
+                            'https://flagcdn.com/w80/${widget.flagCode}.png',
+                            width: 100,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) =>
+                                const Icon(Icons.flag,
+                                    color: Colors.white, size: 40),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          widget.code,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
