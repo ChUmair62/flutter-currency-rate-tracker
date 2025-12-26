@@ -6,27 +6,28 @@ class StockSection extends StatelessWidget {
 
   // ===== TOP 20 STOCKS (PLACEHOLDER DATA) =====
   static final List<Map<String, dynamic>> stocks = [
-    {'symbol': 'AAPL', 'name': 'Apple', 'price': 190.4, 'change': 1.2, 'logo': 'https://logo.clearbit.com/apple.com'},
-    {'symbol': 'MSFT', 'name': 'Microsoft', 'price': 375.6, 'change': -0.6, 'logo': 'https://logo.clearbit.com/microsoft.com'},
-    {'symbol': 'GOOGL', 'name': 'Alphabet', 'price': 138.2, 'change': 0.9, 'logo': 'https://logo.clearbit.com/google.com'},
-    {'symbol': 'AMZN', 'name': 'Amazon', 'price': 152.8, 'change': 1.7, 'logo': 'https://logo.clearbit.com/amazon.com'},
-    {'symbol': 'META', 'name': 'Meta', 'price': 485.1, 'change': -1.1, 'logo': 'https://logo.clearbit.com/meta.com'},
-    {'symbol': 'TSLA', 'name': 'Tesla', 'price': 248.3, 'change': 2.5, 'logo': 'https://logo.clearbit.com/tesla.com'},
-    {'symbol': 'NVDA', 'name': 'NVIDIA', 'price': 890.7, 'change': 3.1, 'logo': 'https://logo.clearbit.com/nvidia.com'},
-    {'symbol': 'JPM', 'name': 'JPMorgan', 'price': 172.9, 'change': -0.4, 'logo': 'https://logo.clearbit.com/jpmorganchase.com'},
-    {'symbol': 'V', 'name': 'Visa', 'price': 275.4, 'change': 0.3, 'logo': 'https://logo.clearbit.com/visa.com'},
-    {'symbol': 'MA', 'name': 'Mastercard', 'price': 455.2, 'change': 0.6, 'logo': 'https://logo.clearbit.com/mastercard.com'},
-    {'symbol': 'NFLX', 'name': 'Netflix', 'price': 610.5, 'change': -1.8, 'logo': 'https://logo.clearbit.com/netflix.com'},
-    {'symbol': 'ADBE', 'name': 'Adobe', 'price': 525.6, 'change': 1.1, 'logo': 'https://logo.clearbit.com/adobe.com'},
-    {'symbol': 'ORCL', 'name': 'Oracle', 'price': 118.3, 'change': 0.4, 'logo': 'https://logo.clearbit.com/oracle.com'},
-    {'symbol': 'INTC', 'name': 'Intel', 'price': 43.7, 'change': -0.7, 'logo': 'https://logo.clearbit.com/intel.com'},
-    {'symbol': 'IBM', 'name': 'IBM', 'price': 183.4, 'change': 0.2, 'logo': 'https://logo.clearbit.com/ibm.com'},
-    {'symbol': 'PEP', 'name': 'PepsiCo', 'price': 170.8, 'change': -0.3, 'logo': 'https://logo.clearbit.com/pepsico.com'},
-    {'symbol': 'KO', 'name': 'Coca-Cola', 'price': 61.4, 'change': 0.5, 'logo': 'https://logo.clearbit.com/coca-cola.com'},
-    {'symbol': 'DIS', 'name': 'Disney', 'price': 104.2, 'change': 1.4, 'logo': 'https://logo.clearbit.com/disney.com'},
-    {'symbol': 'CSCO', 'name': 'Cisco', 'price': 49.6, 'change': -0.2, 'logo': 'https://logo.clearbit.com/cisco.com'},
-    {'symbol': 'PFE', 'name': 'Pfizer', 'price': 27.9, 'change': -0.8, 'logo': 'https://logo.clearbit.com/pfizer.com'},
-  ];
+  {'symbol': 'AAPL', 'name': 'Apple', 'price': 190.4, 'change': 1.2, 'logo': 'https://financialmodelingprep.com/image-stock/AAPL.png'},
+  {'symbol': 'MSFT', 'name': 'Microsoft', 'price': 375.6, 'change': -0.6, 'logo': 'https://financialmodelingprep.com/image-stock/MSFT.png'},
+  {'symbol': 'GOOGL', 'name': 'Alphabet', 'price': 138.2, 'change': 0.9, 'logo': 'https://financialmodelingprep.com/image-stock/GOOGL.png'},
+  {'symbol': 'AMZN', 'name': 'Amazon', 'price': 152.8, 'change': 1.7, 'logo': 'https://financialmodelingprep.com/image-stock/AMZN.png'},
+  {'symbol': 'META', 'name': 'Meta', 'price': 485.1, 'change': -1.1, 'logo': 'https://financialmodelingprep.com/image-stock/META.png'},
+  {'symbol': 'TSLA', 'name': 'Tesla', 'price': 248.3, 'change': 2.5, 'logo': 'https://financialmodelingprep.com/image-stock/TSLA.png'},
+  {'symbol': 'NVDA', 'name': 'NVIDIA', 'price': 890.7, 'change': 3.1, 'logo': 'https://financialmodelingprep.com/image-stock/NVDA.png'},
+  {'symbol': 'JPM', 'name': 'JPMorgan', 'price': 172.9, 'change': -0.4, 'logo': 'https://financialmodelingprep.com/image-stock/JPM.png'},
+  {'symbol': 'V', 'name': 'Visa', 'price': 275.4, 'change': 0.3, 'logo': 'https://financialmodelingprep.com/image-stock/V.png'},
+  {'symbol': 'MA', 'name': 'Mastercard', 'price': 455.2, 'change': 0.6, 'logo': 'https://financialmodelingprep.com/image-stock/MA.png'},
+  {'symbol': 'NFLX', 'name': 'Netflix', 'price': 610.5, 'change': -1.8, 'logo': 'https://financialmodelingprep.com/image-stock/NFLX.png'},
+  {'symbol': 'ADBE', 'name': 'Adobe', 'price': 525.6, 'change': 1.1, 'logo': 'https://financialmodelingprep.com/image-stock/ADBE.png'},
+  {'symbol': 'ORCL', 'name': 'Oracle', 'price': 118.3, 'change': 0.4, 'logo': 'https://financialmodelingprep.com/image-stock/ORCL.png'},
+  {'symbol': 'INTC', 'name': 'Intel', 'price': 43.7, 'change': -0.7, 'logo': 'https://financialmodelingprep.com/image-stock/INTC.png'},
+  {'symbol': 'IBM', 'name': 'IBM', 'price': 183.4, 'change': 0.2, 'logo': 'https://financialmodelingprep.com/image-stock/IBM.png'},
+  {'symbol': 'PEP', 'name': 'PepsiCo', 'price': 170.8, 'change': -0.3, 'logo': 'https://financialmodelingprep.com/image-stock/PEP.png'},
+  {'symbol': 'KO', 'name': 'Coca-Cola', 'price': 61.4, 'change': 0.5, 'logo': 'https://financialmodelingprep.com/image-stock/KO.png'},
+  {'symbol': 'DIS', 'name': 'Disney', 'price': 104.2, 'change': 1.4, 'logo': 'https://financialmodelingprep.com/image-stock/DIS.png'},
+  {'symbol': 'CSCO', 'name': 'Cisco', 'price': 49.6, 'change': -0.2, 'logo': 'https://financialmodelingprep.com/image-stock/CSCO.png'},
+  {'symbol': 'PFE', 'name': 'Pfizer', 'price': 27.9, 'change': -0.8, 'logo': 'https://financialmodelingprep.com/image-stock/PFE.png'},
+];
+
 
   @override
   Widget build(BuildContext context) {
