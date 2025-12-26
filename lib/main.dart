@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'sections/crypto_section.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -235,6 +237,9 @@ class _CurrencyPageState extends State<CurrencyPage> {
             ),
 
             const SizedBox(height: 30),
+            // ===== CRYPTO SECTION =====
+const CryptoSection(),
+
           ],
         ),
       ),
@@ -314,7 +319,7 @@ class _CurrencyCardState extends State<CurrencyCard> {
     Flexible(
       child: Image.network(
         'https://flagcdn.com/w80/${widget.flagCode}.png',
-        width: 56,
+        width: 100,
         fit: BoxFit.contain,
         errorBuilder: (_, __, ___) =>
             const Icon(Icons.flag, color: Colors.white, size: 40),
