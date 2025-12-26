@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 import 'sections/crypto_section.dart';
 
 
+
 void main() {
   runApp(const MyApp());
 }
