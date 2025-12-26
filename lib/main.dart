@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'sections/crypto_section.dart';
+import 'sections/stock_section.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -226,6 +228,8 @@ ClipRRect(
 
   // ===== CRYPTO =====
   CryptoSection(),
+  const StockSection(),
+
 
   const SizedBox(height: 120),
 ],
