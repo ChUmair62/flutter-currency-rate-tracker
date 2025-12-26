@@ -26,6 +26,8 @@ class CurrencyPage extends StatefulWidget {
 }
 
 class _CurrencyPageState extends State<CurrencyPage> {
+  double amount = 1.0;
+
   late VideoPlayerController _videoController;
 
   final List<Map<String, String>> currencies = [
@@ -101,126 +103,145 @@ class _CurrencyPageState extends State<CurrencyPage> {
 
           // ===== CONTENT =====
           SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Text(
-                    'Currencies',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+  child: Center(
+    child: ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height,
+      ),
+      child: IntrinsicHeight(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // 🔥 vertical centering
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
 
-                const SizedBox(height: 20),
-
-                // ===== HORIZONTAL CURRENCY CARDS =====
-                SizedBox(
-                  height: 120,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: currencies.length,
-                    itemBuilder: (context, index) {
-                      final currency = currencies[index];
-                      final isSelected =
-                          currency['code'] == selectedCurrency;
-
-                      return CurrencyCard(
-                        code: currency['code']!,
-                        flagCode: currency['flag']!,
-                        selected: isSelected,
-                        onTap: () {
-                          setState(() {
-                            selectedCurrency = currency['code']!;
-                            rateToPKR = 280.0 + index; // placeholder
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
-
-                const SizedBox(height: 40),
-
-                // ===== CALCULATOR (NO HOVER) =====
-                Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: BackdropFilter(
-                      filter:
-                          ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                      child: Container(
-                        width: 420,
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.white24),
-                        ),
-                        child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              '$selectedCurrency → PKR',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            TextField(
-                              controller: amountController,
-                              keyboardType:
-                                  TextInputType.number,
-                              style: const TextStyle(
-                                  color: Colors.white),
-                              decoration: InputDecoration(
-                                hintText: 'Enter amount',
-                                hintStyle: const TextStyle(
-                                    color: Colors.white54),
-                                filled: true,
-                                fillColor:
-                                    Colors.black.withOpacity(0.4),
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(10),
-                                  borderSide:
-                                      BorderSide.none,
-                                ),
-                              ),
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            Text(
-                              '${amountController.text} $selectedCurrency = '
-                              '${(double.tryParse(amountController.text) ?? 1) * rateToPKR} PKR',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            // ===== SECTION TITLE =====
+            const Text(
+              'Currencies',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
+
+            const SizedBox(height: 30),
+
+            // ===== HORIZONTAL CURRENCY CARDS =====
+            SizedBox(
+              height: 340, // MUST be >= card size
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                itemCount: currencies.length,
+                itemBuilder: (context, index) {
+                  final currency = currencies[index];
+                  final isSelected =
+                      currency['code'] == selectedCurrency;
+
+                  return CurrencyCard(
+                    code: currency['code']!,
+                    flagCode: currency['flag']!,
+                    selected: isSelected,
+                    onTap: () {
+                      setState(() {
+                        selectedCurrency = currency['code']!;
+                        rateToPKR = 280.0 + index; // placeholder
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
+
+            const SizedBox(height: 40),
+
+            // ===== CALCULATION BOX (RECTANGULAR) =====
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                  child: Container(
+                    width: 360,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 22,
+                      vertical: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(color: Colors.white24),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min, // 🔒 no overflow
+                      children: [
+                        Text(
+                          '$selectedCurrency → PKR',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        TextField(
+                          controller: amountController,
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            setState(() {
+                              amount =
+                                  double.tryParse(value) ?? 1.0;
+                            });
+                          },
+                          style:
+                              const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            hintText: 'Enter amount',
+                            hintStyle: const TextStyle(
+                                color: Colors.white54),
+                            filled: true,
+                            fillColor:
+                                Colors.black.withOpacity(0.35),
+                            contentPadding:
+                                const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 14),
+
+                        Text(
+                          '$amount $selectedCurrency = ${(amount * rateToPKR).toStringAsFixed(2)} PKR',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 30),
+          ],
+        ),
+      ),
+    ),
+  ),
+),
+
         ],
       ),
     );
@@ -228,6 +249,7 @@ class _CurrencyPageState extends State<CurrencyPage> {
 }
 
 // ===== CURRENCY CARD =====
+// ===== CURRENCY CARD (FIXED & STABLE) =====
 class CurrencyCard extends StatefulWidget {
   final String code;
   final String flagCode;
@@ -258,53 +280,58 @@ class _CurrencyCardState extends State<CurrencyCard> {
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          margin: const EdgeInsets.only(right: 16),
+          margin: const EdgeInsets.only(right: 20),
           transform: hovered
-              ? (Matrix4.identity()..translate(0, -8))
+              ? (Matrix4.identity()..translate(0, -10))
               : Matrix4.identity(),
           child: AnimatedScale(
             scale: hovered ? 1.05 : 1.0,
             duration: const Duration(milliseconds: 200),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               child: BackdropFilter(
-                filter:
-                    ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(
-                  width: 100,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: widget.selected
-                        ? Colors.white.withOpacity(0.18)
-                        : Colors.white.withOpacity(0.08),
-                    borderRadius:
-                        BorderRadius.circular(16),
-                    border: Border.all(
+                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: AspectRatio(
+                  aspectRatio: 1, // 🔒 PERFECT SQUARE
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
                       color: widget.selected
-                          ? Colors.greenAccent
-                          : Colors.white24,
+                          ? Colors.white.withOpacity(0.18)
+                          : Colors.white.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: widget.selected
+                            ? Colors.greenAccent
+                            : Colors.white24,
+                        width: 1.5,
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center,
-                    children: [
-                      Image.network(
-                        'https://flagcdn.com/w40/${widget.flagCode}.png',
-                        width: 32,
-                        errorBuilder:
-                            (_, __, ___) =>
-                                const Icon(Icons.flag),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        widget.code,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                    child:Column(
+  mainAxisAlignment: MainAxisAlignment.center,
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    Flexible(
+      child: Image.network(
+        'https://flagcdn.com/w80/${widget.flagCode}.png',
+        width: 56,
+        fit: BoxFit.contain,
+        errorBuilder: (_, __, ___) =>
+            const Icon(Icons.flag, color: Colors.white, size: 40),
+      ),
+    ),
+    const SizedBox(height: 12),
+    Text(
+      widget.code,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+),
+
                   ),
                 ),
               ),
