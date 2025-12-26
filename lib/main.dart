@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'widgets/crypto_section.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,22 +13,48 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: CurrencyPage(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class CurrencyPage extends StatefulWidget {
+  const CurrencyPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<CurrencyPage> createState() => _CurrencyPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _CurrencyPageState extends State<CurrencyPage> {
   late VideoPlayerController _videoController;
-  bool videoReady = false;
-  bool cardHovered = false;
+
+  final List<Map<String, String>> currencies = [
+    {'code': 'USD', 'flag': 'us'},
+    {'code': 'EUR', 'flag': 'eu'},
+    {'code': 'GBP', 'flag': 'gb'},
+    {'code': 'JPY', 'flag': 'jp'},
+    {'code': 'AUD', 'flag': 'au'},
+    {'code': 'CAD', 'flag': 'ca'},
+    {'code': 'CHF', 'flag': 'ch'},
+    {'code': 'CNY', 'flag': 'cn'},
+    {'code': 'INR', 'flag': 'in'},
+    {'code': 'SAR', 'flag': 'sa'},
+    {'code': 'AED', 'flag': 'ae'},
+    {'code': 'KWD', 'flag': 'kw'},
+    {'code': 'QAR', 'flag': 'qa'},
+    {'code': 'SGD', 'flag': 'sg'},
+    {'code': 'MYR', 'flag': 'my'},
+    {'code': 'THB', 'flag': 'th'},
+    {'code': 'KRW', 'flag': 'kr'},
+    {'code': 'SEK', 'flag': 'se'},
+    {'code': 'NOK', 'flag': 'no'},
+    {'code': 'NZD', 'flag': 'nz'},
+  ];
+
+  String selectedCurrency = 'USD';
+  double rateToPKR = 280.0; // placeholder
+  final TextEditingController amountController =
+      TextEditingController(text: '1');
 
   @override
   void initState() {
@@ -37,17 +62,18 @@ class _HomePageState extends State<HomePage> {
     _videoController =
         VideoPlayerController.asset('assets/videos/bg.mp4')
           ..initialize().then((_) {
-            setState(() => videoReady = true);
             _videoController
               ..setLooping(true)
               ..setVolume(0)
               ..play();
+            setState(() {});
           });
   }
 
   @override
   void dispose() {
     _videoController.dispose();
+    amountController.dispose();
     super.dispose();
   }
 
@@ -55,15 +81,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('Currency → PKR'),
-        backgroundColor: Colors.black,
-        centerTitle: true,
-      ),
       body: Stack(
         children: [
           // ===== VIDEO BACKGROUND =====
-          if (videoReady)
+          if (_videoController.value.isInitialized)
             SizedBox.expand(
               child: FittedBox(
                 fit: BoxFit.cover,
@@ -76,79 +97,220 @@ class _HomePageState extends State<HomePage> {
             ),
 
           // ===== DARK OVERLAY =====
-          Container(color: Colors.black.withOpacity(0.5)),
+          Container(color: Colors.black.withOpacity(0.6)),
 
           // ===== CONTENT =====
           SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: 40),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ===== MAIN CURRENCY CARD =====
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    'Currencies',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // ===== HORIZONTAL CURRENCY CARDS =====
+                SizedBox(
+                  height: 120,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: currencies.length,
+                    itemBuilder: (context, index) {
+                      final currency = currencies[index];
+                      final isSelected =
+                          currency['code'] == selectedCurrency;
+
+                      return CurrencyCard(
+                        code: currency['code']!,
+                        flagCode: currency['flag']!,
+                        selected: isSelected,
+                        onTap: () {
+                          setState(() {
+                            selectedCurrency = currency['code']!;
+                            rateToPKR = 280.0 + index; // placeholder
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 40),
+
+                // ===== CALCULATOR (NO HOVER) =====
                 Center(
-                  child: MouseRegion(
-                    onEnter: (_) => setState(() => cardHovered = true),
-                    onExit: (_) => setState(() => cardHovered = false),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      transform: cardHovered
-                          ? (Matrix4.identity()..translate(0, -12))
-                          : Matrix4.identity(),
-                      child: AnimatedScale(
-                        scale: cardHovered ? 1.03 : 1.0,
-                        duration: const Duration(milliseconds: 200),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(18),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                            child: Container(
-                              width: 420,
-                              padding: const EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.08),
-                                borderRadius: BorderRadius.circular(18),
-                                border: Border.all(color: Colors.white24),
-                              ),
-                              child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.stretch,
-                                children: const [
-                                  Text(
-                                    'Live Currency Rates',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 24),
-                                  Text(
-                                    'Currency → PKR logic here',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: BackdropFilter(
+                      filter:
+                          ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        width: 420,
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.white24),
+                        ),
+                        child: Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              '$selectedCurrency → PKR',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
+
+                            const SizedBox(height: 20),
+
+                            TextField(
+                              controller: amountController,
+                              keyboardType:
+                                  TextInputType.number,
+                              style: const TextStyle(
+                                  color: Colors.white),
+                              decoration: InputDecoration(
+                                hintText: 'Enter amount',
+                                hintStyle: const TextStyle(
+                                    color: Colors.white54),
+                                filled: true,
+                                fillColor:
+                                    Colors.black.withOpacity(0.4),
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10),
+                                  borderSide:
+                                      BorderSide.none,
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            Text(
+                              '${amountController.text} $selectedCurrency = '
+                              '${(double.tryParse(amountController.text) ?? 1) * rateToPKR} PKR',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 50),
-
-                // ===== CRYPTO SECTION =====
-                const CryptoSection(),
-
-                const SizedBox(height: 60),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ===== CURRENCY CARD =====
+class CurrencyCard extends StatefulWidget {
+  final String code;
+  final String flagCode;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const CurrencyCard({
+    super.key,
+    required this.code,
+    required this.flagCode,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  State<CurrencyCard> createState() => _CurrencyCardState();
+}
+
+class _CurrencyCardState extends State<CurrencyCard> {
+  bool hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => hovered = true),
+      onExit: (_) => setState(() => hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          margin: const EdgeInsets.only(right: 16),
+          transform: hovered
+              ? (Matrix4.identity()..translate(0, -8))
+              : Matrix4.identity(),
+          child: AnimatedScale(
+            scale: hovered ? 1.05 : 1.0,
+            duration: const Duration(milliseconds: 200),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: BackdropFilter(
+                filter:
+                    ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  width: 100,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: widget.selected
+                        ? Colors.white.withOpacity(0.18)
+                        : Colors.white.withOpacity(0.08),
+                    borderRadius:
+                        BorderRadius.circular(16),
+                    border: Border.all(
+                      color: widget.selected
+                          ? Colors.greenAccent
+                          : Colors.white24,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        'https://flagcdn.com/w40/${widget.flagCode}.png',
+                        width: 32,
+                        errorBuilder:
+                            (_, __, ___) =>
+                                const Icon(Icons.flag),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        widget.code,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
